@@ -1,0 +1,24 @@
+title Discovery on Bootup/Restart\n(Publish any service offered followed by subscribe to services required)
+
+
+participant config-node as config
+participant control-node as control
+participant database-node as db
+participant analytics-node as analytics
+participant webui-node as webui
+participant compute-node-1 as compute1
+participant compute-node-n as computen
+config -> config: publish api + ifmap
+control -> config: publish control + dns
+analytics -> config: publish collector
+config -> +config: subscribe for collector
+config -> -config: collector server
+control -> +config: subscribe for ifmap
+config -> -control: ifmap server
+control -> +config: subscribe for collector
+config -> -control: collector server
+
+compute1 -> +config: subscribe for control,dns,collector
+config -> -compute1: control,dns,collector
+computen -> +config: subscribe for control,dns,collector
+config -> -computen: control,dns,collector

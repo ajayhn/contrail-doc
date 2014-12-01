@@ -1,3 +1,4 @@
+{{{{{{ blue-modern
 title Discovery on Bootup/Restart\n(Publish any service offered followed by subscribe to services required)
 
 
@@ -21,3 +22,4 @@ note over bgp-s, dns-s: control-node
 note over vizd, opsrv: analytics-node
 }
 note over disc-s, api-s, ifmap-s, schema-s, bgp-s, dns-s, vizd, opsrv: contrail-controller
+}}}}}}

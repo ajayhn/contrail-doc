@@ -1,0 +1,23 @@
+title Discovery on Bootup/Restart\n(Publish any service offered followed by subscribe to services required)
+
+
+participant contrail-discovery as disc-s
+participant contrail-api as api-s
+participant ifmap as ifmap-s
+participant contrail-schema as schema-s
+
+participant contrail-control as bgp-s
+participant contrail-dns as dns-s
+
+participant contrail-collector as vizd
+participant contrail-opserver as opsrv
+
+participant contrail-webui as webui
+participant contrail-vrouter-agent as agent
+
+parallel {
+note over disc-s, api-s, ifmap-s, schema-s: config-node
+note over bgp-s, dns-s: control-node
+note over vizd, opsrv: analytics-node
+}
+note over disc-s, api-s, ifmap-s, schema-s, bgp-s, dns-s, vizd, opsrv: contrail-controller

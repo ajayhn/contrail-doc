@@ -4,8 +4,8 @@ Most common issues
 
 VM booted without an ip
 =======================
-Likely causes:
-  * VMI doesn't have a link to RI
+**Likely causes**:
+ + `VMI <../glossary.rst#VMI>`_ doesn't have a link to RI
 
 Debugging `Checklist <vm-booted-without-ip/checklist.rst>`_
 

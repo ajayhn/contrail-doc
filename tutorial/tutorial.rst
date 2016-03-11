@@ -12,11 +12,13 @@ The feature highlight progression will be in the sequence of
   * Connecting networks via network-policy.
   * Source NAT using logical-router.
   * Loadbalancing through VIP and floating-ip on VIP.
-  * Service-Chaining using VM L2 and L3 based service.
   * Analyzer.
+  * Service-Chaining using VM L2 and L3 based service,for
+    specific type of traffic, chains of services
   * vDNS.
   * Link-local services including name resolution.
   * Heat and port-tuples.
+  * PNF
 
 Preparation work for creating projects and adding user to projects:
   * create a project tutorial-public, a project tutorial-project-1 and
@@ -32,7 +34,7 @@ Simple network create and VM boot:
 
 Accessing via floating-ip:
   * Create a web-server network/subnet and launch a VM in it.
-    * create a network called webserver-net in tutorial-tenant-1
+    * create a network called webserver-net in tutorial-project-1
     * create a subnet 1.1.1.0/24
     * create a port on webserver-net, it will get ip of 1.1.1.3
     * launch a VM, webserver-vm-1 using port created above

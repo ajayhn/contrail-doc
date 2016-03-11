@@ -1,43 +1,3 @@
-===================
-Indispensable Tools
-===================
-* bash subshell to compose $(<cmd-to-run>)
-* sed http://www.grymoire.com/Unix/Sed.html
-* awk http://www.grymoire.com/Unix/Awk.html
-* netstat
-  + E.g.
-      netstat -anp | grep $(pgrep contrail-api) | grep LISTEN
-      netstat -anp | grep $(pgrep contrail-api) | grep ESTABLISHED
-* lsof
-  + E.g.
-      lsof -p $(pgrep contrail-api) | grep log
-      lsof -p $(pgrep contrail-api)  | wc -l
-      lsof -i :5998
-* strace
-  + E.g.
-      strace -ttt -ffff -p $(pgrep contrail-api) -s 1024
-      strace -ttt -ffff -p $(pgrep contrail-api) -s 1024 -e trace=network
-      # strace following children with timestamp for network system calls into a file:
-      strace -ttt -T -f -p 10553 -o cass-trace -e trace=network -e verbose=all -s 4096
-* tcpdump
-  + E.g.
-      tcpdump -tt -ni any port 8082 -A -s 1024 -e -vvv
-* watch
-  + E.g.
-      watch -n1 "dropstats | grep -v '  0'"
-* timeout
-  + E.g.
-      timeout 60s tcpdump -ni any port 9100 | grep X-Contrail-Useragent
-* dpkg
-  + E.g.
-      dpkg -l | grep contrail-config
-      dpkg --extract /path/to/deb /path/where/to/extract
-* apt-cache
-  + E.g.
-      apt-cache policy contrail-config
-      apt-cache depends contrail-config
-      apt-cache rdepends contrail-config
-
 ==================
 Most common issues
 ==================
@@ -64,13 +24,14 @@ VM not able to reach destination
 ================================
 **Likely causes**:
   + flow setup is not happening
-  + flow entry is set to drop
+  + flow entry is set to drop egress or ingress
   + L2 instead of L3(arp-cache poisoned) or vice-versa
 
 VM intermittently able to reach destination
 ===========================================
 **Likely causes**:
-  + ip-address shared by 2 ports leading to ECMP/asymmetric path
+  + ip-address reused/shared by 2 ports leading to ECMP/asymmetric path
+  + ip-address is of scale-out svc-instance and one of svc-vm is down/dropping
 
 VM is connected to router with SNAT but can't reach out
 =======================================================

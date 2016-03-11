@@ -7,7 +7,7 @@ VM booted without an ip
 Likely causes:
   * VMI doesn't have a link to RI
 
-Debugging `Checklist <vm-booted-without-ip/checklist>`_
+Debugging `Checklist <vm-booted-without-ip/checklist.rst>`_
 
 VM not able to reach destination
 ================================

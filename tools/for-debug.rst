@@ -46,6 +46,7 @@ Contrail command-line tools
 * contrail-logs
 * flow, vif, nh, rt, mpls
 * ifmap-view
+* curl -u <user>:<passwd> localhost:8095/<resource>s?detail=True | python -m json.tool | less
 
 ==========================================
 Tools for third-party s/w used by contrail
@@ -53,3 +54,4 @@ Tools for third-party s/w used by contrail
 * pycassaShell
 * zkCli.sh
 * rabbitmqctl
+* contrail-api-cli

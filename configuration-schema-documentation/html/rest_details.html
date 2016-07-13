@@ -1,0 +1,619 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>REST API Details &mdash; vnc_api 0.99 documentation</title>
+    
+    <link rel="stylesheet" href="_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.99',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/myscript.js"></script>
+    <link rel="top" title="vnc_api 0.99 documentation" href="index.html" />
+    <link rel="next" title="Library API Details" href="library_details.html" />
+    <link rel="prev" title="Library API Tutorial" href="tutorial_with_library.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="library_details.html" title="Library API Details"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial_with_library.html" title="Library API Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">vnc_api 0.99 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="rest-api-details">
+<h1>REST API Details<a class="headerlink" href="#rest-api-details" title="Permalink to this headline">¶</a></h1>
+<p>The configuration API server provides a means of accessing and manipulating configuration
+elements of the system using HTTP operations on resources represented in JSON.
+The REST APIs can be classified into two categories:</p>
+<blockquote>
+<div><ul class="simple">
+<li>those that are configuration element type dependant</li>
+<li>those that are common for all configuration element types</li>
+</ul>
+</div></blockquote>
+<p>The configuration element types (also referred to as resource types) have a hierarchical relationship
+described in <tt class="xref doc docutils literal"><span class="pre">vnc_cfg.xsd</span></tt> schema. The class definitions of all resource types are available at
+<a class="reference internal" href="vnc_cfg_api_server.gen.html#module-vnc_cfg_api_server.gen.resource_common" title="vnc_cfg_api_server.gen.resource_common"><tt class="xref py py-mod docutils literal"><span class="pre">vnc_cfg_api_server.gen.resource_common</span></tt></a> module. JSON representation of these objects are what is
+expected on the wire.</p>
+<div class="section" id="discovering-api-server-resources">
+<h2>Discovering API server resources<a class="headerlink" href="#discovering-api-server-resources" title="Permalink to this headline">¶</a></h2>
+<p>The resources managed by the server can be be obtained at the root URL(home-page).</p>
+<div class="highlight-python"><div class="highlight"><pre>[root@a5s1 ~]# curl http://10.84.14.1:8082/
+{
+  &quot;href&quot;: &quot;http://10.84.14.2:8082&quot;,
+  &quot;links&quot;: [
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/documentation/index.html&quot;,
+        &quot;name&quot;: &quot;documentation&quot;,
+        &quot;rel&quot;: &quot;documentation&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/config-root&quot;,
+        &quot;name&quot;: &quot;config-root&quot;,
+        &quot;rel&quot;: &quot;root&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/domains&quot;,
+        &quot;name&quot;: &quot;domain&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/service-instances&quot;,
+        &quot;name&quot;: &quot;service-instance&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/instance-ips&quot;,
+        &quot;name&quot;: &quot;instance-ip&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/network-policys&quot;,
+        &quot;name&quot;: &quot;network-policy&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-DNS-records&quot;,
+        &quot;name&quot;: &quot;virtual-DNS-record&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/route-targets&quot;,
+        &quot;name&quot;: &quot;route-target&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/floating-ips&quot;,
+        &quot;name&quot;: &quot;floating-ip&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/floating-ip-pools&quot;,
+        &quot;name&quot;: &quot;floating-ip-pool&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/bgp-routers&quot;,
+        &quot;name&quot;: &quot;bgp-router&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-routers&quot;,
+        &quot;name&quot;: &quot;virtual-router&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/global-system-configs&quot;,
+        &quot;name&quot;: &quot;global-system-config&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/namespaces&quot;,
+        &quot;name&quot;: &quot;namespace&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/provider-attachments&quot;,
+        &quot;name&quot;: &quot;provider-attachment&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-DNSs&quot;,
+        &quot;name&quot;: &quot;virtual-DNS&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/customer-attachments&quot;,
+        &quot;name&quot;: &quot;customer-attachment&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-machines&quot;,
+        &quot;name&quot;: &quot;virtual-machine&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/service-templates&quot;,
+        &quot;name&quot;: &quot;service-template&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/security-groups&quot;,
+        &quot;name&quot;: &quot;security-group&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/access-control-lists&quot;,
+        &quot;name&quot;: &quot;access-control-list&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/network-ipams&quot;,
+        &quot;name&quot;: &quot;network-ipam&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-networks&quot;,
+        &quot;name&quot;: &quot;virtual-network&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/projects&quot;,
+        &quot;name&quot;: &quot;project&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/routing-instances&quot;,
+        &quot;name&quot;: &quot;routing-instance&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-machine-interfaces&quot;,
+        &quot;name&quot;: &quot;virtual-machine-interface&quot;,
+        &quot;rel&quot;: &quot;collection&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/domain&quot;,
+        &quot;name&quot;: &quot;domain&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/service-instance&quot;,
+        &quot;name&quot;: &quot;service-instance&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/instance-ip&quot;,
+        &quot;name&quot;: &quot;instance-ip&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/network-policy&quot;,
+        &quot;name&quot;: &quot;network-policy&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-DNS-record&quot;,
+        &quot;name&quot;: &quot;virtual-DNS-record&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/route-target&quot;,
+        &quot;name&quot;: &quot;route-target&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/floating-ip&quot;,
+        &quot;name&quot;: &quot;floating-ip&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/floating-ip-pool&quot;,
+        &quot;name&quot;: &quot;floating-ip-pool&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/bgp-router&quot;,
+        &quot;name&quot;: &quot;bgp-router&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-router&quot;,
+        &quot;name&quot;: &quot;virtual-router&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/config-root&quot;,
+        &quot;name&quot;: &quot;config-root&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/global-system-config&quot;,
+        &quot;name&quot;: &quot;global-system-config&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/namespace&quot;,
+        &quot;name&quot;: &quot;namespace&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/provider-attachment&quot;,
+        &quot;name&quot;: &quot;provider-attachment&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-DNS&quot;,
+        &quot;name&quot;: &quot;virtual-DNS&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/customer-attachment&quot;,
+        &quot;name&quot;: &quot;customer-attachment&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-machine&quot;,
+        &quot;name&quot;: &quot;virtual-machine&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/service-template&quot;,
+        &quot;name&quot;: &quot;service-template&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/security-group&quot;,
+        &quot;name&quot;: &quot;security-group&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/access-control-list&quot;,
+        &quot;name&quot;: &quot;access-control-list&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/network-ipam&quot;,
+        &quot;name&quot;: &quot;network-ipam&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-network&quot;,
+        &quot;name&quot;: &quot;virtual-network&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/project&quot;,
+        &quot;name&quot;: &quot;project&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/routing-instance&quot;,
+        &quot;name&quot;: &quot;routing-instance&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-machine-interface&quot;,
+        &quot;name&quot;: &quot;virtual-machine-interface&quot;,
+        &quot;rel&quot;: &quot;resource-base&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/fqname-to-id&quot;,
+        &quot;name&quot;: &quot;name-to-id&quot;,
+        &quot;rel&quot;: &quot;action&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/id-to-fqname&quot;,
+        &quot;name&quot;: &quot;id-to-name&quot;,
+        &quot;rel&quot;: &quot;action&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/ifmap-to-id&quot;,
+        &quot;name&quot;: &quot;ifmap-to-id&quot;,
+        &quot;rel&quot;: &quot;action&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/useragent-kv&quot;,
+        &quot;name&quot;: &quot;useragent-keyvalue&quot;,
+        &quot;rel&quot;: &quot;action&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-network/%s/ip-alloc&quot;,
+        &quot;name&quot;: &quot;virtual-network-ip-alloc&quot;,
+        &quot;rel&quot;: &quot;action&quot;
+      }
+    },
+    {
+      &quot;link&quot;: {
+        &quot;href&quot;: &quot;http://10.84.14.2:8082/virtual-network/%s/ip-free&quot;,
+        &quot;name&quot;: &quot;virtual-network-ip-free&quot;,
+        &quot;rel&quot;: &quot;action&quot;
+      }
+    }
+  ]
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-a-resource">
+<h2>Creating a resource<a class="headerlink" href="#creating-a-resource" title="Permalink to this headline">¶</a></h2>
+<p>To create a resource, a <tt class="docutils literal"><span class="pre">POST</span></tt> has to be issued on the collection URL.
+So for a resource of type <em>example-resource</em>,</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>METHOD</em>: POST</li>
+<li><em>URL</em>: <a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resources/</li>
+<li><em>BODY</em>: json representation of example-resource type</li>
+<li><em>RESPONSE</em>: uuid and href of created resource</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="reading-a-resource">
+<h2>Reading a resource<a class="headerlink" href="#reading-a-resource" title="Permalink to this headline">¶</a></h2>
+<p>To read a resource, a <tt class="docutils literal"><span class="pre">GET</span></tt> has to be issued on the resource URL.</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>METHOD</em>: GET</li>
+<li><em>URL</em>: <a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resource/&lt;example-resource-uuid&gt;</li>
+<li><em>BODY</em>: None</li>
+<li><em>RESPONSE</em>: json representation of the resource</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="update-a-resource">
+<h2>Update a resource<a class="headerlink" href="#update-a-resource" title="Permalink to this headline">¶</a></h2>
+<p>To update a resource, a <tt class="docutils literal"><span class="pre">PUT</span></tt> has to be issued on the resource URL.</p>
+<blockquote>
+<div><ul class="simple">
+<li><em>METHOD</em>: PUT</li>
+<li><em>URL</em>: <a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resource/&lt;example-resource-uuid&gt;</li>
+<li><em>BODY</em>: json representation of resource attributes that are changing</li>
+<li><em>RESPONSE</em>: uuid and href of updated resource</li>
+</ul>
+</div></blockquote>
+<p>References to other resources are specified as a list of dictionaries with
+&#8220;to&#8221; and  &#8220;attr&#8221; keys where &#8220;to&#8221; is the fully-qualified name of the resource
+being referred to and &#8220;attr&#8221; is the data associated with the relation (if any).</p>
+</div>
+<div class="section" id="listing-resources">
+<h2>Listing Resources<a class="headerlink" href="#listing-resources" title="Permalink to this headline">¶</a></h2>
+<p>To list a set of resources, a <tt class="docutils literal"><span class="pre">GET</span></tt> has to be issued on the collection URL
+with an optional query parameter mentioning the parent resource that contains
+this collection. If parent resource is not mentioned, a resource named
+&#8216;default-&lt;parent-type&gt;&#8217; is assumed.</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><em>METHOD</em>: GET</p>
+</li>
+<li><dl class="first docutils">
+<dt><em>URL</em>: <a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resources</dt>
+<dd><p class="first last"><a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resources?parent_id=&lt;parent_uuid&gt; <em>OR</em>
+<a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resources?parent_fq_name_str=&lt;parent&#8217;s fully-qualified name delimited by &#8216;:&#8217;&gt; <em>OR</em>
+<a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resources?obj_uuids=&lt;example1_uuid&gt;,&lt;example2_uuid&gt;&amp;detail=True <em>OR</em>
+<a class="reference external" href="http:/">http:/</a>/&lt;ip&gt;:&lt;port&gt;/example_resources?back_ref_id=&lt;back_ref_uuid&gt; <em>OR</em></p>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>BODY</em>: None</p>
+</li>
+<li><p class="first"><em>RESPONSE</em>: json list of uuid and href of collection if detail not specified, else json list of collection dicts</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">REST API Details</a><ul>
+<li><a class="reference internal" href="#discovering-api-server-resources">Discovering API server resources</a></li>
+<li><a class="reference internal" href="#creating-a-resource">Creating a resource</a></li>
+<li><a class="reference internal" href="#reading-a-resource">Reading a resource</a></li>
+<li><a class="reference internal" href="#update-a-resource">Update a resource</a></li>
+<li><a class="reference internal" href="#listing-resources">Listing Resources</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial_with_library.html"
+                        title="previous chapter">Library API Tutorial</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="library_details.html"
+                        title="next chapter">Library API Details</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/rest_details.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="library_details.html" title="Library API Details"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial_with_library.html" title="Library API Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">vnc_api 0.99 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Juniper Networks Inc..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
